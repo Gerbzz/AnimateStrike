@@ -16,13 +16,13 @@ AnimateStrike combines a bounded 2D rig with painted cels and pose keys. Scrub t
 
 Source-only standalone candidate. The original checkout passed focused tests and a Windows loopback workflow, but this smaller published workspace has only resolved metadata and has not been compiled or tested. Its current three-part sample is not the planned release template; no installer is supplied.
 
-## Animate a short scene
+## The current character workflow
 
-Work with the current three-part character, paint or erase held cels, and add pose keys as you scrub through frames. Save a new `.animatestrike` revision to retain the editable state, or export a PNG sequence for review.
+The editor starts with a procedural three-part, 128 × 128, 24-frame character. It supports paint and erase, frame scrubbing, pose keys, and eight in-memory undo/redo steps. A saved `.animatestrike` revision keeps the editable work; export produces PNG frames. Persistent recovery and GIF export remain open.
 
-## Build after the shared build slot is available
+## Build and validation
 
-From this repository root with Rust 1.95 or newer:
+From this repository root with Rust 1.95 or newer, the intended source checks are below. They have not yet run against this standalone package:
 
 ```powershell
 cargo test --locked -p strike-character --lib
