@@ -1,8 +1,24 @@
 # AnimateStrike
 
-AnimateStrike is a Windows-first Rust character animation editor prototype. It edits a bounded 2D parented rig, held RGBA cels, and position/rotation/scale keys over the selected EffectCraft project and CPU renderer. The current native editor starts with a procedural three-part, 128 × 128, 24-frame character. It supports paint/erase, frame scrubbing, pose keys, eight in-memory undo/redo steps, immutable `.animatestrike` revisions, and PNG sequence export.
+**by PWDS**
 
-This is a **source-only standalone candidate** prepared from a tested EffectCraft checkout. The original source passed 9 native app/control tests and 8 character-engine tests; its built Windows executable and production loopback workflow were independently rechecked. The smaller standalone workspace has passed metadata resolution but has **not** yet been compiled or tested. No release or installer is supplied.
+**Bring a small character to life.**
+
+AnimateStrike combines a bounded 2D rig with painted cels and pose keys. Scrub through frames, adjust a pose, paint or erase, keep immutable project revisions, and export a PNG sequence.
+
+### Highlights
+
+- Paint cels and set position, rotation, or scale keys.
+- Scrub a short animation with in-memory undo and redo.
+- Save editable revisions and export PNG frames.
+
+## Current status
+
+Source-only standalone candidate. The original checkout passed focused tests and a Windows loopback workflow, but this smaller published workspace has only resolved metadata and has not been compiled or tested. Its current three-part sample is not the planned release template; no installer is supplied.
+
+## Animate a short scene
+
+Work with the current three-part character, paint or erase held cels, and add pose keys as you scrub through frames. Save a new `.animatestrike` revision to retain the editable state, or export a PNG sequence for review.
 
 ## Build after the shared build slot is available
 
