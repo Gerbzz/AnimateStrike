@@ -1,0 +1,19 @@
+[package]
+name = "animatestrike"
+description = "Focused native 2D character editor using the pinned EffectCraft project and renderer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+strike-character = { path = "../../crates/strike-character" }
+effectcraft-project = { workspace = true }
+effectcraft-keyframe = { workspace = true }
+effectcraft-time = { workspace = true }
+effectcraft-color = { workspace = true }
+eframe = { workspace = true, features = ["default_fonts", "wgpu", "accesskit"] }
+egui = { workspace = true }
+serde_json = { workspace = true }

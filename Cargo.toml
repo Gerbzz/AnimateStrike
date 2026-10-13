@@ -1,0 +1,71 @@
+[workspace]
+resolver = "3"
+members = ["apps/animatestrike", "crates/color", "crates/effects", "crates/geom", "crates/keyframe", "crates/model", "crates/path", "crates/project", "crates/raster", "crates/render", "crates/segment", "crates/text", "crates/time", "crates/track", "crates/strike-character"]
+default-members = ["apps/animatestrike", "crates/strike-character"]
+
+[workspace.package]
+version = "0.7.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+rust-version = "1.95"
+repository = "https://github.com/storytold/effectcraft"
+
+[workspace.dependencies]
+effectcraft-time = { path = "crates/time" }
+effectcraft-geom = { path = "crates/geom" }
+effectcraft-color = { path = "crates/color" }
+effectcraft-raster = { path = "crates/raster" }
+effectcraft-path = { path = "crates/path" }
+effectcraft-keyframe = { path = "crates/keyframe" }
+effectcraft-project = { path = "crates/project" }
+effectcraft-text = { path = "crates/text" }
+effectcraft-effects = { path = "crates/effects" }
+effectcraft-track = { path = "crates/track" }
+effectcraft-segment = { path = "crates/segment" }
+effectcraft-model = { path = "crates/model" }
+effectcraft-render = { path = "crates/render" }
+thiserror = "2"
+serde = { version = "1", features = ["derive", "rc"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+log = "0.4"
+rayon = "1"
+web-time = "1"
+proptest = "1"
+kurbo = { version = "0.13", features = ["serde"] }
+tiny-skia = { version = "0.12", default-features = false, features = ["std", "simd"] }
+skrifa = { version = "0.44", default-features = false, features = ["std"] }
+harfrust = { version = "0.12", default-features = false, features = ["std"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+egui = "0.36"
+eframe = { version = "0.36", default-features = false }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+dbg_macro = "warn"
+todo = "warn"
+too_many_arguments = "allow"
+needless_range_loop = "allow"
+type_complexity = "allow"
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package.effectcraft-raster]
+opt-level = 3
+
+[profile.dev.package.effectcraft-render]
+opt-level = 3
+
+[profile.dev.package.effectcraft-effects]
+opt-level = 3
+
+[profile.dev.package.effectcraft-track]
+opt-level = 3
+
+[profile.dev.package.effectcraft-path]
+opt-level = 3

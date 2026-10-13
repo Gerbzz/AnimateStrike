@@ -1,0 +1,22 @@
+[package]
+name = "strike-character"
+description = "AnimateStrike character rig validation over EffectCraft projects"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+effectcraft-project = { workspace = true }
+effectcraft-time = { workspace = true }
+effectcraft-keyframe = { workspace = true }
+effectcraft-color = { workspace = true }
+effectcraft-render = { workspace = true }
+effectcraft-raster = { workspace = true }
+effectcraft-geom = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+image = { workspace = true }
+thiserror = { workspace = true }

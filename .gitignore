@@ -1,0 +1,6 @@
+/target/
+*.animatestrike
+*.log
+*.tmp
+*.exe
+*.pdb
