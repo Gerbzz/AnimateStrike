@@ -1,0 +1,21 @@
+{
+  "app": "AnimateStrike",
+  "asset": "assets/branding/AnimateStrike.png",
+  "method": "Lossless rectangular extraction of original pixels with ImageMagick. No scaling, recoloring, tracing, generation, transparency fabrication or animal changes. Original cream outside rounded corners retained. Labels excluded.",
+  "coordinate_system": "Origin top-left; crop bounds [left, top, right, bottom), right/bottom exclusive.",
+  "source_sha256": "93e0c9b8f786a1d58051e65e3d964bd923967e99f699633ad365fcdcecf90aed",
+  "crop_bounds": [
+    1360,
+    0,
+    2016,
+    656
+  ],
+  "dimensions": [
+    656,
+    656
+  ],
+  "sha256": "4703f99de276980fbe47e201d5f3549d216c41a65207163bda7c86778e6d1168",
+  "decoded_rgb_sha256": "30517e9176ac708cdf2d634ff62f4b3fa16bec7f30190d6767cbddaf2c13580b",
+  "pixel_equality_verified": true,
+  "git_blob_sha": "bdc26740f7415f121edd984f93f6268040d54713"
+}
