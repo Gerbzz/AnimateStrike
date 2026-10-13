@@ -2,13 +2,13 @@
   <img src="assets/branding/AnimateStrike.png" alt="Original AnimateStrike logo" width="160" height="160">
 </p>
 
-# AnimateStrike
+<h1 align="center">AnimateStrike</h1>
 
-**by PWDS**
+<p align="center"><strong>by PWDS</strong><br><strong>Bring a small character to life.</strong></p>
 
-**Bring a small character to life.** AnimateStrike joins painted cels to a parented 2D rig. Set poses across a timeline, revise a short scene, keep editable project revisions, and export PNG frames.
+AnimateStrike joins painted cels to a parented 2D rig. Set poses across a timeline, revise a short scene, keep editable project revisions, and export PNG frames.
 
-[Build from source](#build-from-source) · [Source and test boundary](SOURCE_SCOPE.md) · [Control protocol](apps/animatestrike/CONTROL.md) · [Original artwork](assets/branding)
+<p align="center"><a href="#build-from-source">Build from source</a> · <a href="SOURCE_SCOPE.md">Source and test boundary</a> · <a href="apps/animatestrike/CONTROL.md">Control protocol</a> · <a href="assets/branding">Original artwork</a></p>
 
 ## Paint, pose, and export
 
