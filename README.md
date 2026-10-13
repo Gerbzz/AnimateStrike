@@ -4,10 +4,6 @@
 
 **Bring a small character to life.** AnimateStrike joins painted cels to a parented 2D rig. Set poses across a timeline, revise a short scene, keep editable project revisions, and export PNG frames.
 
-![AnimateStrike native editor showing its three-part starter character and timeline](docs/images/animatestrike-baseline-native.png)
-
-*Native Windows capture from the original task-5 source checkpoint. The published smaller workspace copies the app source unchanged but has not had its own build or visual acceptance. This is the current three-part starter, not a finished character template.*
-
 [Build from source](#build-from-source) · [Source and test boundary](SOURCE_SCOPE.md) · [Control protocol](apps/animatestrike/CONTROL.md)
 
 ## Paint, pose, and export
@@ -26,7 +22,7 @@ Export writes a sequence of PNG frames, not an encoded movie. GIF export, timing
 
 ## Current status
 
-This is a **source-only standalone candidate**, with no installer. The original checkout passed focused tests and a Windows loopback workflow; the reduced published workspace has resolved metadata but has **not** been compiled or tested as a standalone package. Native pointer, keyboard-only, screen-reader, high-DPI, broad import, and other-platform acceptance remain open. The screenshot above shows the original native build, not validation of a new release.
+This is a **source-only standalone candidate**, with no installer. The original checkout passed focused tests and a Windows loopback workflow; the reduced published workspace has resolved metadata but has **not** been compiled or tested as a standalone package. Native pointer, keyboard-only, screen-reader, high-DPI, broad import, and other-platform acceptance remain open.
 
 ## Build from source
 
