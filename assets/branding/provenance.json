@@ -1,21 +1,70 @@
 {
   "app": "AnimateStrike",
   "asset": "assets/branding/AnimateStrike.png",
-  "method": "Lossless rectangular extraction of original pixels with ImageMagick. No scaling, recoloring, tracing, generation, transparency fabrication or animal changes. Original cream outside rounded corners retained. Labels excluded.",
-  "coordinate_system": "Origin top-left; crop bounds [left, top, right, bottom), right/bottom exclusive.",
-  "source_sha256": "93e0c9b8f786a1d58051e65e3d964bd923967e99f699633ad365fcdcecf90aed",
-  "crop_bounds": [
-    1360,
-    0,
-    2016,
-    656
-  ],
+  "method": "Measured rounded alpha mask applied to the original 656x656 logo tile, then translated by whole pixels to center its visible bounds. Original visible RGB and masked visible RGBA were verified unchanged.",
+  "source_tile": {
+    "repository": "Gerbzz/AnimateStrike",
+    "commit": "a0551b86ecb678dc8fa1795ef969655925c0f333",
+    "path": "assets/branding/AnimateStrike.png",
+    "sha256": "4703f99de276980fbe47e201d5f3549d216c41a65207163bda7c86778e6d1168",
+    "git_blob_sha": "bdc26740f7415f121edd984f93f6268040d54713"
+  },
+  "mask_and_centering": {
+    "inset_pixels": 1.5,
+    "masked_alpha_bbox": [
+      26,
+      24,
+      649,
+      629
+    ],
+    "centered_alpha_bbox": [
+      16,
+      25,
+      639,
+      630
+    ],
+    "integer_translation": [
+      -10,
+      1
+    ],
+    "padding_ltrb": [
+      16,
+      25,
+      17,
+      26
+    ],
+    "original_visible_rgb_exact": true,
+    "masked_visible_rgba_exact": true,
+    "transparent_corners": true
+  },
   "dimensions": [
     656,
     656
   ],
-  "sha256": "4703f99de276980fbe47e201d5f3549d216c41a65207163bda7c86778e6d1168",
-  "decoded_rgb_sha256": "30517e9176ac708cdf2d634ff62f4b3fa16bec7f30190d6767cbddaf2c13580b",
-  "pixel_equality_verified": true,
-  "git_blob_sha": "bdc26740f7415f121edd984f93f6268040d54713"
+  "mode": "RGBA",
+  "sha256": "97fd89f8f1043b876a97e1457ffa5f14f8b75d391f57dc58ae9151e39cefe48f",
+  "decoded_rgba_sha256": "9454d29fe0b3e62bd76e7bf6462349a8ce447c5dd117d03e80d52e189fc161dc",
+  "git_blob_sha": "2fc237d78127d2bef79274319fd259029cf732ec",
+  "tool": "ImageMagick 7.1.2-34 Q16 x64",
+  "original_tile_provenance": {
+    "app": "AnimateStrike",
+    "asset": "assets/branding/AnimateStrike.png",
+    "method": "Lossless rectangular extraction of original pixels with ImageMagick. No scaling, recoloring, tracing, generation, transparency fabrication or animal changes. Original cream outside rounded corners retained. Labels excluded.",
+    "coordinate_system": "Origin top-left; crop bounds [left, top, right, bottom), right/bottom exclusive.",
+    "source_sha256": "93e0c9b8f786a1d58051e65e3d964bd923967e99f699633ad365fcdcecf90aed",
+    "crop_bounds": [
+      1360,
+      0,
+      2016,
+      656
+    ],
+    "dimensions": [
+      656,
+      656
+    ],
+    "sha256": "4703f99de276980fbe47e201d5f3549d216c41a65207163bda7c86778e6d1168",
+    "decoded_rgb_sha256": "30517e9176ac708cdf2d634ff62f4b3fa16bec7f30190d6767cbddaf2c13580b",
+    "pixel_equality_verified": true,
+    "git_blob_sha": "bdc26740f7415f121edd984f93f6268040d54713"
+  }
 }
