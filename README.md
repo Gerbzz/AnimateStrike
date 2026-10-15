@@ -15,6 +15,10 @@
 
 AnimateStrike joins painted cels to a parented 2D rig. Set poses across a timeline, revise a short scene, keep editable project revisions, and export PNG frames.
 
+![AnimateStrike baseline native editor showing a procedural character, parts, brush, pose controls, and timeline](docs/images/animatestrike-baseline-native.png)
+
+*Native baseline preview from 12 October 2026, showing the original editor and its procedural three-part starter character. This is a source checkpoint image; the reduced standalone workspace on `main` has not been built or tested. See [screenshot provenance](docs/SCREENSHOT_PROVENANCE.md).*
+
 <p align="center"><a href="#build-from-source">Build from source</a> · <a href="SOURCE_SCOPE.md">Source and test boundary</a> · <a href="apps/animatestrike/CONTROL.md">Control protocol</a> · <a href="assets/branding">Original artwork</a></p>
 
 ## Paint, pose, and export

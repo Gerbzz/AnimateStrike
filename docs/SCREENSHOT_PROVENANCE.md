@@ -1,0 +1,7 @@
+# Baseline native editor screenshot
+
+`docs/images/animatestrike-baseline-native.png` is an existing 1196 x 829 image of the original AnimateStrike Windows editor. The local baseline-window capture was saved on 12 October 2026 UTC, before this standalone repository was published. It shows the app window with the procedural three-part starter character, Parts, Brush, Pose, Files, and Timeline controls. Visual review found no user document, client asset, or personal workstation path in the image. Visible control labels also occur in the published editor source.
+
+The prepublication capture and the PNG added to this repository in [commit `3048372`](https://github.com/Gerbzz/AnimateStrike/commit/3048372d9f413b35d3b25bb64b6e3fc8af8b46bb) match byte for byte: 144,327 bytes, SHA-256 `72709420913540B9C571CABF77698862A3F61E865A613E6E7A27B548D543D2C9`, Git blob `97cce240ffe52f62986c6e3a3a51a398f1bf04ba`. The original source checkpoint retained a Windows executable with SHA-256 `10CA0780C722E796347ABCFC17C1EABB0978DAFB78FB72F28D9436AADAEED3BF`; its focused tests and loopback workflow are described in [SOURCE_SCOPE.md](../SOURCE_SCOPE.md). No capture receipt binds this PNG to that exact executable hash.
+
+This is a baseline visual preview. The reduced public standalone workspace has not been built or tested, and the screenshot does not establish pointer or keyboard workflows, save/export through the visible UI, accessibility, or release readiness. The separately developed donor-host candidate is not shown.
