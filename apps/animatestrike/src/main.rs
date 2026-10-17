@@ -607,10 +607,10 @@ impl CharacterApp {
                     ui.colored_label(Color32::from_rgb(255, 185, 102), "Unsaved edits");
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui.add_enabled(self.session.can_redo(), egui::Button::new("Redo")).clicked() {
+                    if ui.add_enabled(self.session.can_redo(), egui::Button::new("Redo")).on_hover_text("Ctrl+Y").clicked() {
                         self.redo_action();
                     }
-                    if ui.add_enabled(self.session.can_undo(), egui::Button::new("Undo")).clicked() {
+                    if ui.add_enabled(self.session.can_undo(), egui::Button::new("Undo")).on_hover_text("Ctrl+Z").clicked() {
                         self.undo_action();
                     }
                     if ui.button("New").clicked() {
@@ -661,6 +661,7 @@ impl CharacterApp {
 
     fn inspector(&mut self, ui: &mut egui::Ui) {
         egui::Panel::right("inspector").resizable(true).default_size(270.0).show(ui, |ui| {
+            egui::ScrollArea::vertical().show(ui, |ui| {
             ui.heading("POSE");
             ui.label(egui::RichText::new("Values are keyed at the selected frame").small().weak());
             ui.separator();
@@ -690,7 +691,7 @@ impl CharacterApp {
             ui.heading("FILES");
             ui.label("New editable revision");
             ui.text_edit_singleline(&mut self.save_path);
-            if ui.button("Save .animatestrike").clicked() {
+            if ui.button("Save .animatestrike").on_hover_text("Ctrl+S").clicked() {
                 self.save();
             }
             ui.add_space(8.0);
@@ -720,6 +721,7 @@ impl CharacterApp {
                     .small()
                     .weak(),
             );
+            });
         });
     }
 
@@ -743,7 +745,12 @@ impl CharacterApp {
             }
             let exposures: Vec<String> = self.session.current.exposures.iter().filter(|e| e.part == self.part).map(|e| (e.frame + 1).to_string()).collect();
             ui.label(format!("Cel starts on frames: {}", if exposures.is_empty() { "none (rig only)".into() } else { exposures.join(", ") }));
-            ui.label(egui::RichText::new(&self.status).color(Color32::from_rgb(170, 215, 229)));
+            let status_color = if self.status.contains("failed") || self.status.contains("Failed") {
+                Color32::from_rgb(255, 159, 145)
+            } else {
+                Color32::from_rgb(170, 215, 229)
+            };
+            ui.label(egui::RichText::new(&self.status).color(status_color));
             ui.add_space(6.0);
         });
     }
@@ -807,6 +814,16 @@ impl eframe::App for CharacterApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
         self.dispatch_control();
+        if ctx.input(|input| input.modifiers.ctrl && input.key_pressed(egui::Key::S)) {
+            self.finish_stroke();
+            self.save();
+        }
+        if ctx.input(|input| input.modifiers.ctrl && input.key_pressed(egui::Key::Z)) {
+            self.undo_action();
+        }
+        if ctx.input(|input| input.modifiers.ctrl && input.key_pressed(egui::Key::Y)) {
+            self.redo_action();
+        }
         self.top_bar(ui);
         self.parts_panel(ui);
         self.inspector(ui);
