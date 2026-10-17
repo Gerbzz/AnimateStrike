@@ -818,11 +818,11 @@ impl eframe::App for CharacterApp {
             self.finish_stroke();
             self.save();
         }
-        if !ctx.wants_keyboard_input()
+        if !ctx.egui_wants_keyboard_input()
             && ctx.input(|input| input.modifiers.ctrl && input.key_pressed(egui::Key::Z)) {
             self.undo_action();
         }
-        if !ctx.wants_keyboard_input()
+        if !ctx.egui_wants_keyboard_input()
             && ctx.input(|input| input.modifiers.ctrl && input.key_pressed(egui::Key::Y)) {
             self.redo_action();
         }
