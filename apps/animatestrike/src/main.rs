@@ -140,6 +140,29 @@ enum Pending {
     Open(String),
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum StatusSeverity {
+    Info,
+    Warning,
+    Error,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Shortcut {
+    Save,
+    Undo,
+    Redo,
+}
+
+fn shortcut_action(ctrl: bool, text_focused: bool, save: bool, undo: bool, redo: bool) -> Option<Shortcut> {
+    if !ctrl { None }
+    else if save { Some(Shortcut::Save) }
+    else if text_focused { None }
+    else if undo { Some(Shortcut::Undo) }
+    else if redo { Some(Shortcut::Redo) }
+    else { None }
+}
+
 struct CharacterApp {
     session: CharacterSession,
     frame: i64,
@@ -157,6 +180,7 @@ struct CharacterApp {
     dirty: bool,
     pending: Option<Pending>,
     status: String,
+    status_severity: StatusSeverity,
     control_rx: Option<Receiver<control::Request>>,
     control_roots: Option<control::Roots>,
 }
@@ -201,11 +225,17 @@ impl CharacterApp {
             dirty: false,
             pending: None,
             status: "Draw on a cel, move to another frame, then draw again to split its hold.".into(),
+            status_severity: StatusSeverity::Info,
             control_rx: None,
             control_roots: None,
         };
         app.sync_pose();
         Ok(app)
+    }
+
+    fn set_status(&mut self, message: impl Into<String>, severity: StatusSeverity) {
+        self.status = message.into();
+        self.status_severity = severity;
     }
 
     fn current_pose(&self) -> Option<PartPose> {
@@ -243,26 +273,26 @@ impl CharacterApp {
         })?;
         self.dirty = true;
         self.generation += 1;
-        self.status = format!("Pose key stored at frame {}.", frame + 1);
+        self.set_status(format!("Pose key stored at frame {}.", frame + 1), StatusSeverity::Info);
         Ok(())
     }
 
     fn set_key(&mut self) {
         if let Err(error) = self.set_key_action() {
-            self.status = format!("Pose key rejected: {error}");
+            self.set_status(format!("Pose key rejected: {error}"), StatusSeverity::Error);
         }
     }
 
     fn start_stroke(&mut self) {
         if self.part == self.session.current.rig.parts[0] {
-            self.status = "Select Torso cel or Head cel to paint; Root rig carries pose only.".into();
+            self.set_status("Select Torso cel or Head cel to paint; Root rig carries pose only.", StatusSeverity::Warning);
             return;
         }
         let pixels = match self.session.current.asset_at(self.part, self.frame) {
             Ok(Some(asset)) => asset.rgba.clone(),
             Ok(None) => vec![0; (CANVAS * CANVAS * 4) as usize],
             Err(error) => {
-                self.status = format!("Cannot start cel stroke: {error}");
+                self.set_status(format!("Cannot start cel stroke: {error}"), StatusSeverity::Error);
                 return;
             }
         };
@@ -305,13 +335,13 @@ impl CharacterApp {
         self.session.edit(|doc| doc.put_cel(stroke.part, stroke.frame, CANVAS, CANVAS, stroke.pixels))?;
         self.dirty = true;
         self.generation += 1;
-        self.status = format!("Cel painted at frame {}; earlier held frames are unchanged.", stroke.frame + 1);
+        self.set_status(format!("Cel painted at frame {}; earlier held frames are unchanged.", stroke.frame + 1), StatusSeverity::Info);
         Ok(())
     }
 
     fn finish_stroke(&mut self) {
         if let Err(error) = self.finish_stroke_action() {
-            self.status = format!("Cel stroke rejected: {error}");
+            self.set_status(format!("Cel stroke rejected: {error}"), StatusSeverity::Error);
         }
     }
 
@@ -321,7 +351,7 @@ impl CharacterApp {
             self.generation += 1;
             self.sync_pose();
             self.dirty = true;
-            self.status = "Undo applied.".into();
+            self.set_status("Undo applied.", StatusSeverity::Info);
             true
         } else {
             false
@@ -334,7 +364,7 @@ impl CharacterApp {
             self.generation += 1;
             self.sync_pose();
             self.dirty = true;
-            self.status = "Redo applied.".into();
+            self.set_status("Redo applied.", StatusSeverity::Info);
             true
         } else {
             false
@@ -367,14 +397,14 @@ impl CharacterApp {
         }
         self.session.current.save_new(path)?;
         self.dirty = false;
-        self.status = format!("Saved new editable revision: {}", path.display());
+        self.set_status(format!("Saved new editable revision: {}", path.display()), StatusSeverity::Info);
         Ok(())
     }
 
     fn save(&mut self) {
         let path = self.save_path.trim().to_owned();
         if let Err(error) = self.save_action(Path::new(&path)) {
-            self.status = format!("Save failed; current document is unchanged: {error}");
+            self.set_status(format!("Save failed; current document is unchanged: {error}"), StatusSeverity::Error);
         }
     }
 
@@ -391,14 +421,14 @@ impl CharacterApp {
         self.preview = None;
         self.dirty = false;
         self.sync_pose();
-        self.status = format!("Reopened editable character: {}", path.display());
+        self.set_status(format!("Reopened editable character: {}", path.display()), StatusSeverity::Info);
         Ok(())
     }
 
     fn open(&mut self, path: &str) {
         match self.open_action(Path::new(path)) {
             Ok(()) => {}
-            Err(error) => self.status = format!("Open failed; current document is unchanged: {error}"),
+            Err(error) => self.set_status(format!("Open failed; current document is unchanged: {error}"), StatusSeverity::Error),
         }
     }
 
@@ -406,14 +436,14 @@ impl CharacterApp {
         self.finish_stroke_action()?;
         let end = self.session.current.frame_count()?;
         self.session.current.export_png_sequence(dir, 0, end)?;
-        self.status = format!("Exported {end} PNG frames into {}.", dir.display());
+        self.set_status(format!("Exported {end} PNG frames into {}.", dir.display()), StatusSeverity::Info);
         Ok(end)
     }
 
     fn export(&mut self) {
         let dir = self.export_dir.trim().to_owned();
         if let Err(error) = self.export_action(Path::new(&dir)) {
-            self.status = format!("Export failed: {error}. A newly created folder may contain completed frames; existing folders were preserved.");
+            self.set_status(format!("Export failed: {error}. A newly created folder may contain completed frames; existing folders were preserved."), StatusSeverity::Error);
         }
     }
 
@@ -587,9 +617,9 @@ impl CharacterApp {
                         self.dirty = false;
                         self.stroke = None;
                         self.sync_pose();
-                        self.status = "New character ready.".into();
+                        self.set_status("New character ready.", StatusSeverity::Info);
                     }
-                    Err(error) => self.status = format!("New character failed: {error}"),
+                    Err(error) => self.set_status(format!("New character failed: {error}"), StatusSeverity::Error),
                 },
                 Pending::Open(path) => self.open(&path),
             }
@@ -607,10 +637,10 @@ impl CharacterApp {
                     ui.colored_label(Color32::from_rgb(255, 185, 102), "Unsaved edits");
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui.add_enabled(self.session.can_redo(), egui::Button::new("Redo")).clicked() {
+                    if ui.add_enabled(self.session.can_redo(), egui::Button::new("Redo")).on_hover_text("Ctrl+Y").clicked() {
                         self.redo_action();
                     }
-                    if ui.add_enabled(self.session.can_undo(), egui::Button::new("Undo")).clicked() {
+                    if ui.add_enabled(self.session.can_undo(), egui::Button::new("Undo")).on_hover_text("Ctrl+Z").clicked() {
                         self.undo_action();
                     }
                     if ui.button("New").clicked() {
@@ -661,6 +691,7 @@ impl CharacterApp {
 
     fn inspector(&mut self, ui: &mut egui::Ui) {
         egui::Panel::right("inspector").resizable(true).default_size(270.0).show(ui, |ui| {
+            egui::ScrollArea::vertical().show(ui, |ui| {
             ui.heading("POSE");
             ui.label(egui::RichText::new("Values are keyed at the selected frame").small().weak());
             ui.separator();
@@ -690,7 +721,7 @@ impl CharacterApp {
             ui.heading("FILES");
             ui.label("New editable revision");
             ui.text_edit_singleline(&mut self.save_path);
-            if ui.button("Save .animatestrike").clicked() {
+            if ui.button("Save .animatestrike").on_hover_text("Ctrl+S").clicked() {
                 self.save();
             }
             ui.add_space(8.0);
@@ -699,7 +730,7 @@ impl CharacterApp {
             if ui.button("Open character").clicked() {
                 let path = self.open_path.trim().to_string();
                 if path.is_empty() {
-                    self.status = "Enter a character project path.".into();
+                    self.set_status("Enter a character project path.", StatusSeverity::Warning);
                 } else {
                     self.finish_stroke();
                     self.pending = Some(Pending::Open(path));
@@ -720,6 +751,7 @@ impl CharacterApp {
                     .small()
                     .weak(),
             );
+            });
         });
     }
 
@@ -743,7 +775,12 @@ impl CharacterApp {
             }
             let exposures: Vec<String> = self.session.current.exposures.iter().filter(|e| e.part == self.part).map(|e| (e.frame + 1).to_string()).collect();
             ui.label(format!("Cel starts on frames: {}", if exposures.is_empty() { "none (rig only)".into() } else { exposures.join(", ") }));
-            ui.label(egui::RichText::new(&self.status).color(Color32::from_rgb(170, 215, 229)));
+            let status_color = match self.status_severity {
+                StatusSeverity::Info => Color32::from_rgb(170, 215, 229),
+                StatusSeverity::Warning => Color32::from_rgb(255, 185, 102),
+                StatusSeverity::Error => Color32::from_rgb(255, 159, 145),
+            };
+            ui.label(egui::RichText::new(&self.status).color(status_color));
             ui.add_space(6.0);
         });
     }
@@ -770,7 +807,7 @@ impl CharacterApp {
                         ui.painter().image(texture.id(), rect, Rect::from_min_max(Pos2::ZERO, pos2(1.0, 1.0)), Color32::WHITE);
                     }
                     Err(error) => {
-                        self.status = format!("Preview failed: {error}");
+                        self.set_status(format!("Preview failed: {error}"), StatusSeverity::Error);
                     }
                 }
                 ui.painter().rect_stroke(rect, 0.0, egui::Stroke::new(1.0, Color32::from_gray(118)), egui::StrokeKind::Outside);
@@ -790,8 +827,8 @@ impl CharacterApp {
                                     self.paint_at(x, y);
                                 }
                             }
-                            Ok(None) => self.status = "Cannot paint through a singular character pose.".into(),
-                            Err(error) => self.status = format!("Cannot map the brush to this part: {error}"),
+                            Ok(None) => self.set_status("Cannot paint through a singular character pose.", StatusSeverity::Error),
+                            Err(error) => self.set_status(format!("Cannot map the brush to this part: {error}"), StatusSeverity::Error),
                         }
                     }
                 }
@@ -807,6 +844,20 @@ impl eframe::App for CharacterApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
         self.dispatch_control();
+        let text_focused = ctx.egui_wants_keyboard_input();
+        let shortcut = ctx.input(|input| shortcut_action(
+            input.modifiers.ctrl,
+            text_focused,
+            input.key_pressed(egui::Key::S),
+            input.key_pressed(egui::Key::Z),
+            input.key_pressed(egui::Key::Y),
+        ));
+        match shortcut {
+            Some(Shortcut::Save) => { self.finish_stroke(); self.save(); }
+            Some(Shortcut::Undo) => { self.undo_action(); }
+            Some(Shortcut::Redo) => { self.redo_action(); }
+            None => {}
+        }
         self.top_bar(ui);
         self.parts_panel(ui);
         self.inspector(ui);
@@ -847,6 +898,30 @@ fn main() -> eframe::Result {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn shortcuts_leave_text_undo_to_the_focused_field() {
+        assert_eq!(shortcut_action(true, true, false, true, false), None);
+        assert_eq!(shortcut_action(true, true, false, false, true), None);
+        assert_eq!(shortcut_action(true, true, true, false, false), Some(Shortcut::Save));
+        assert_eq!(shortcut_action(true, false, false, true, false), Some(Shortcut::Undo));
+        assert_eq!(shortcut_action(true, false, false, false, true), Some(Shortcut::Redo));
+        assert_eq!(shortcut_action(false, false, false, true, false), None);
+    }
+
+    #[test]
+    fn status_severity_tracks_guidance_failure_and_recovery() {
+        let mut app = CharacterApp::fresh().unwrap();
+        app.part = app.session.current.rig.parts[0];
+        app.start_stroke();
+        assert_eq!(app.status_severity, StatusSeverity::Warning);
+        app.save_path = "invalid.txt".into();
+        app.save();
+        assert_eq!(app.status_severity, StatusSeverity::Error);
+        app.part = app.session.current.rig.parts[1];
+        app.set_key();
+        assert_eq!(app.status_severity, StatusSeverity::Info);
+    }
 
     #[test]
     fn procedural_character_scene_is_editable_and_parented() {
