@@ -19,11 +19,11 @@ AnimateStrike joins painted cels to a parented 2D rig. Set poses across a timeli
 
 - **Target:** A Rust-native 2D character-animation editor, extending the existing focused editor and selected EffectCraft components.
 - **Current implementation:** The [Cargo workspace](Cargo.toml) and [AnimateStrike entry point](apps/animatestrike/src/main.rs) are already Rust, combining the first-party character/rig workflow with selected Rust donor crates rather than the full EffectCraft application.
-- **Remaining migration:** Build and test the reduced standalone workspace, then continue export, recovery and native-interaction work. The retained baseline screenshot and earlier checkout tests do not establish acceptance of the published standalone candidate.
+- **Remaining migration:** Continue export, recovery and native-interaction work. Windows CI has now built and tested the selected standalone editor, but that does not establish interactive runtime, broad format or release acceptance.
 
 ![AnimateStrike baseline native editor showing a procedural character, parts, brush, pose controls, and timeline](docs/images/animatestrike-baseline-native.png)
 
-*Native baseline preview from 12 October 2026, showing the original editor and its procedural three-part starter character. This is a source checkpoint image; the reduced standalone workspace on `main` has not been built or tested. See [screenshot provenance](docs/SCREENSHOT_PROVENANCE.md).*
+*Native baseline preview from 12 October 2026, showing the original editor and its procedural three-part starter character. This remains a historical source-checkpoint image, not a new capture from the standalone build verified below. See [screenshot provenance](docs/SCREENSHOT_PROVENANCE.md).*
 
 <p align="center"><a href="#build-from-source">Build from source</a> · <a href="SOURCE_SCOPE.md">Source and test boundary</a> · <a href="apps/animatestrike/CONTROL.md">Control protocol</a> · <a href="assets/branding">Original artwork</a></p>
 
@@ -43,7 +43,7 @@ Export writes a sequence of PNG frames, not an encoded movie. GIF export, timing
 
 ## Current status
 
-This is a **source-only standalone candidate**, with no installer. The original checkout passed focused tests and a Windows loopback workflow; the reduced published workspace has resolved metadata but has **not** been compiled or tested as a standalone package. Native pointer, keyboard-only, screen-reader, high-DPI, broad import, and other-platform acceptance remain open.
+This is a **source-only standalone candidate**, with no installer. [Windows CI run 40127553920](https://github.com/Gerbzz/AnimateStrike/actions/runs/40127553920) passed `cargo test --locked -p animatestrike --bin animatestrike` and `cargo build --locked -p animatestrike` for source `7850b3afb7c38e3db912d691c6facaf9df816947`, subsequently merged without source changes. This verifies the selected editor's tests and build, not an interactive runtime session or every workspace package. Native pointer, keyboard-only, screen-reader, high-DPI, broad import, and other-platform acceptance remain open.
 
 ## Build from source
 
@@ -55,7 +55,7 @@ cargo test --locked -p animatestrike --bin animatestrike
 cargo build --locked -p animatestrike
 ```
 
-These commands have not yet run against the reduced workspace. The selected EffectCraft crates, donor licenses and notices, synthetic fixtures, and seven embedded OFL fonts are included. No FilmCraft dependency is in this candidate's selected graph. [SOURCE_SCOPE.md](SOURCE_SCOPE.md) records exact provenance and the original test evidence.
+The linked Windows run executed the second and third commands against the reduced workspace. It does not establish a separate run of the `strike-character --lib` command above. The selected EffectCraft crates, donor licenses and notices, synthetic fixtures, and seven embedded OFL fonts are included. No FilmCraft dependency is in this candidate's selected graph. [SOURCE_SCOPE.md](SOURCE_SCOPE.md) records exact provenance and the original test evidence.
 
 The new AnimateStrike app and `strike-character` crate have no selected first-party license grant. The selected EffectCraft donor code keeps its original MIT/Apache texts and asset notices; this is not a redistributable binary package. Explore the other [PWDS Strike repositories](https://github.com/Gerbzz?tab=repositories&q=Strike).
 
