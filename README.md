@@ -15,6 +15,12 @@
 
 AnimateStrike joins painted cels to a parented 2D rig. Set poses across a timeline, revise a short scene, keep editable project revisions, and export PNG frames.
 
+## Rust direction and migration status
+
+- **Target:** A Rust-native 2D character-animation editor, extending the existing focused editor and selected EffectCraft components.
+- **Current implementation:** The [Cargo workspace](Cargo.toml) and [AnimateStrike entry point](apps/animatestrike/src/main.rs) are already Rust, combining the first-party character/rig workflow with selected Rust donor crates rather than the full EffectCraft application.
+- **Remaining migration:** Build and test the reduced standalone workspace, then continue export, recovery and native-interaction work. The retained baseline screenshot and earlier checkout tests do not establish acceptance of the published standalone candidate.
+
 ![AnimateStrike baseline native editor showing a procedural character, parts, brush, pose controls, and timeline](docs/images/animatestrike-baseline-native.png)
 
 *Native baseline preview from 12 October 2026, showing the original editor and its procedural three-part starter character. This is a source checkpoint image; the reduced standalone workspace on `main` has not been built or tested. See [screenshot provenance](docs/SCREENSHOT_PROVENANCE.md).*
