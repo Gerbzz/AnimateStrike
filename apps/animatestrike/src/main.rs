@@ -4,6 +4,11 @@
 #![cfg_attr(all(target_os = "windows", not(debug_assertions)), windows_subsystem = "windows")]
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
+/// Approved artwork resized from its full canvas, preserving centering and padding.
+fn app_icon() -> egui::IconData {
+    egui::IconData { rgba: include_bytes!("../../../assets/branding/AnimateStrike-128.rgba").to_vec(), width: 128, height: 128 }
+}
+
 mod control;
 
 use std::io::Write;
@@ -889,7 +894,11 @@ fn main() -> eframe::Result {
         }
     };
     let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default().with_title("AnimateStrike").with_inner_size([1180.0, 790.0]).with_min_inner_size([900.0, 600.0]),
+        viewport: egui::ViewportBuilder::default()
+            .with_icon(app_icon())
+            .with_title("AnimateStrike")
+            .with_inner_size([1180.0, 790.0])
+            .with_min_inner_size([900.0, 600.0]),
         ..Default::default()
     };
     eframe::run_native("AnimateStrike", options, Box::new(move |cc| CharacterApp::new(cc, control).map(|app| Box::new(app) as Box<dyn eframe::App>)))
