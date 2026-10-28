@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/branding/AnimateStrike.png" alt="Approved AnimateStrike logo" width="160" height="160">
+  <img src="docs/branding/AnimateStrike.webp" alt="Approved AnimateStrike logo" width="160" height="160">
 </p>
 
 <h1 align="center">AnimateStrike</h1>
