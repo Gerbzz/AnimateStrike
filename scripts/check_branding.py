@@ -26,11 +26,15 @@ class BrandingContract(unittest.TestCase):
         self.assertIn(f'include_bytes!("../../../assets/branding/{APP}-128.rgba")', code)
         self.assertIn("width: 128, height: 128", code)
     def test_readme_uses_canonical_source(self):
-        self.assertIn(f'assets/branding/{APP}.png', (ROOT / "README.md").read_text(encoding="utf-8"))
+        original = ROOT / f"docs/branding/{APP}.webp"
+        self.assertIn(f'docs/branding/{APP}.webp', (ROOT / "README.md").read_text(encoding="utf-8"))
+        self.assertEqual(sha256(original.read_bytes()).hexdigest(), "24154c71c4aa59e555602981cfd7482e1646ca2e9d2572aa2cc94e3d809a102e")
+        with Image.open(original) as approved, Image.open(ROOT / f"assets/branding/{APP}.png") as runtime:
+            self.assertEqual(approved.convert("RGBA").tobytes(), runtime.convert("RGBA").tobytes())
     def test_windows_resource(self):
-        if APP == "AnimateStrike":
-            self.skipTest("No Windows resource/package build in this repository; native window binding is tested")
-        code = (ROOT / f"apps/{PACKAGE}/build.rs").read_text(encoding="utf-8")
+        build_script = ROOT / f"apps/{PACKAGE}/build.rs"
+        self.assertTrue(build_script.exists(), "Windows resource binding missing")
+        code = build_script.read_text(encoding="utf-8")
         self.assertIn(f'set_icon("../../assets/branding/{APP}.ico")', code)
         self.assertIn(f'cargo:rerun-if-changed=../../assets/branding/{APP}.ico', code)
         source = Image.open(ROOT / f"assets/branding/{APP}.png").convert("RGBA")
